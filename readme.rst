@@ -1,69 +1,48 @@
-###################
-What is CodeIgniter
-###################
+FishCI
+======
 
-CodeIgniter is an Application Development Framework - a toolkit - for people
-who build web sites using PHP. Its goal is to enable you to develop projects
-much faster than you could if you were writing code from scratch, by providing
-a rich set of libraries for commonly needed tasks, as well as a simple
-interface and logical structure to access these libraries. CodeIgniter lets
-you creatively focus on your project by minimizing the amount of code needed
-for a given task.
+#概述
+基于ci的3.0版本开发的增强CI框架，基本框架结构不变，加入一些语法糖，多了更强大的library以及helper，并修复ci存在的各种bug
 
-*******************
-Release Information
-*******************
+#功能
+* 加入underscore的helper
+* 加入微信sdk以及QQ的sdk
+* 加入PHPExcel库
+* 加入uedit库
+* 加入PHPMailer库，ci自带的mail根本不能用，163邮箱和qq邮箱都不行
+* 加入更易用的upload库和image库
+* 加入curl库包装的http库，接口跟前台jquery的ajax一致
+* 加入chinese语言库，错误提示更友好
+* 加入标准的MyException库
+* 加入枚举体库以补充PHP没有枚举类型
+* 加入Timer库，ci也能做定时任务了
 
-This repo contains in-development code for future releases. To download the
-latest stable release please visit the `CodeIgniter Downloads
-<http://www.codeigniter.com/download>`_ page.
+#语法糖
+* @view 语法糖
+  原来controller中读取view的写法
+```php
+function index()
+{
+  $result = $this->model->get();
+  if( $result['code'] != 0){
+    $this->load->view('json',$result);
+  }
+  $this->load->view('json',$result);
+}
+```
+ 现在controller中读取view的写法
+```php
+/**
+* @view json
+*/
+function index()
+{
+  return $this->model->get();
+}
+```
 
-**************************
-Changelog and New Features
-**************************
+#修复
+* 修复ci的Disallowed Key Characters的bug
 
-You can find a list of all changes for each release in the `user
-guide change log <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/source/changelog.rst>`_.
-
-*******************
-Server Requirements
-*******************
-
-PHP version 5.4 or newer is recommended.
-
-It should work on 5.2.4 as well, but we strongly advise you NOT to run
-such old versions of PHP, because of potential security and performance
-issues, as well as missing features.
-
-************
-Installation
-************
-
-Please see the `installation section <http://www.codeigniter.com/user_guide/installation/index.html>`_
-of the CodeIgniter User Guide.
-
-*******
-License
-*******
-
-Please see the `license
-agreement <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/source/license.rst>`_.
-
-*********
-Resources
-*********
-
--  `User Guide <http://www.codeigniter.com/docs>`_
--  `Language File Translations <https://github.com/bcit-ci/codeigniter3-translations>`_
--  `Community Forums <http://forum.codeigniter.com/>`_
--  `Community Wiki <https://github.com/bcit-ci/CodeIgniter/wiki>`_
--  `Community IRC <http://www.codeigniter.com/irc>`_
-
-Report security issues to our `Security Panel <mailto:security@codeigniter.com>`_, thank you.
-
-***************
-Acknowledgement
-***************
-
-The CodeIgniter team would like to thank EllisLab, all the
-contributors to the CodeIgniter project and you, the CodeIgniter user.
+#使用方法
+跟标准ci一样，就这么简单
