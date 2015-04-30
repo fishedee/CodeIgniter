@@ -61,6 +61,11 @@ class CI_Model {
 		log_message('debug', "Model Class Initialized ".$this->class->getName() );
 	}
 
+	public function __initialize()
+	{
+
+	}
+
 	// --------------------------------------------------------------------
 
 	/**

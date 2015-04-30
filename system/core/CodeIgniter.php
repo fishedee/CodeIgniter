@@ -400,7 +400,7 @@ if ( ! is_php('5.4'))
  */
 
 	$e404 = FALSE;
-	$class = ucfirst($RTR->class);
+	$class = $RTR->class;
 	$method = $RTR->method;
 
 	if (empty($class) OR ! file_exists(APPPATH.'controllers/'.$RTR->directory.$class.'.php'))
@@ -439,7 +439,7 @@ if ( ! is_php('5.4'))
 				$error_method = 'index';
 			}
 
-			$error_class = ucfirst($error_class);
+			$error_class = $error_class;
 
 			if ( ! class_exists($error_class, FALSE))
 			{
@@ -516,7 +516,7 @@ if ( ! is_php('5.4'))
  * ------------------------------------------------------
  */
 	if( !defined('PHPUNIT_TEST') ){
-		//»ñÈ¡º¯ÊýµÄËùÓÐ×¢ÊÍÁÐ±í
+		//èŽ·å–å‡½æ•°çš„æ‰€æœ‰æ³¨é‡Šåˆ—è¡¨
 		$docComment = array();
 		$callFunc  = new ReflectionMethod($CI,$method);
 		$callFuncDoc   = $callFunc->getDocComment();
@@ -527,10 +527,11 @@ if ( ! is_php('5.4'))
 			}
 		}
 
-		//trans×¢ÊÍ
+		//transæ³¨é‡Š
 		if( isset($docComment['trans']) )
 			$CI->db->trans_begin();
-			
+		
+		// fish begin åŠ å…¥è¯»å–æŽ§åˆ¶å™¨çš„è§†å›¾ï¼Œè‡ªåŠ¨è¾“å‡º
 		try{
 			$callResult = call_user_func_array(array(&$CI, $method), $params);
 			if( isset($docComment['trans']) ){
@@ -546,10 +547,9 @@ if ( ! is_php('5.4'))
 				$CI->db->trans_rollback();
 		}
 			
-		//view×¢ÊÍ
+		//viewæ³¨é‡Š
 		if( isset($docComment['view']))
 			$CI->load->view($docComment['view'],array('data'=>$callResult));
-		call_user_func_array(array(&$CI, $method), $params);
 	}
 
 	// Mark a benchmark end point

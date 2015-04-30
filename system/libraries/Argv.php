@@ -56,7 +56,7 @@ class CI_Argv{
 				$isRequire = false;
 			
 			$fieldValue = $this->CI->input->$method($fieldName,$isXssFilt);
-			if( $fieldValue === false ){
+			if( $fieldValue == null ){
 				if( $isRequire == false ){
 					if( isset($fieldDefaultValue))
 						$fieldValue = $fieldDefaultValue;
