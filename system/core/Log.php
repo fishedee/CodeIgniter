@@ -102,7 +102,7 @@ class CI_Log {
 	 *
 	 * @var array
 	 */
-	protected $_levels = array('ERROR' => 1, 'DEBUG' => 2, 'INFO' => 3, 'ALL' => 4);
+	protected $_levels = array('ERROR' => '1', 'WARN'=>'2', 'INFO' => '3', 'DEBUG' => '4',  'ALL' => '5');
 
 	// --------------------------------------------------------------------
 
@@ -203,8 +203,17 @@ class CI_Log {
 		{
 			$date = date($this->_date_fmt);
 		}
+		if( isset($_SERVER['REMOTE_ADDR']))
+			$addr = $_SERVER['REMOTE_ADDR'];
+		else if( isset($_SEVER['SSH_CONNECTION']))
+			$addr = $_SERVER['SSH_CONNECTION'];
 
-		$message .= $level.' - '.$date.' --> '.$msg."\n";
+		if(isset($_SERVER['REQUEST_URI']))
+			$uri = $_SERVER['REQUEST_URI'];
+		else if(isset($_SERVER['argv']))
+			$uri = implode('/',$_SERVER['argv']);
+		
+		$message .= $level.' - '.$date.' '.$addr.' '.$uri.' --> '.$msg."\n";
 
 		flock($fp, LOCK_EX);
 

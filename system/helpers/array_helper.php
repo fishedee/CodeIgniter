@@ -113,3 +113,34 @@ if ( ! function_exists('elements'))
 		return $return;
 	}
 }
+if ( ! function_exists('array_column_merge'))
+{
+	function array_column_merge($array1, $array2, $indexKey ,$indexOrder=null)
+	{
+		if( $indexOrder == null )
+		{
+			$indexOrder = array_merge(
+				array_column($array1,$indexKey),
+				array_column($array2,$indexKey)
+			);
+			$indexOrder = array_unique($indexOrder);
+		}
+
+		$result = array();
+		$array1 = array_column($array1,null,$indexKey);
+		$array2 = array_column($array2,null,$indexKey);
+		foreach( $indexOrder as $singleIndexOrder)
+		{
+			if( isset($array1[$singleIndexOrder]) == false )
+				continue;
+			if( isset($array2[$singleIndexOrder]) == false )
+				continue;
+			$result[] = array_merge(
+				$array1[$singleIndexOrder],
+				$array2[$singleIndexOrder]
+			);
+		}
+		
+		return $result;
+	}
+}

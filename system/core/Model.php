@@ -48,6 +48,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class CI_Model {
 
+	var $class;
+	var $attachVar;
 	/**
 	 * Class constructor
 	 *
@@ -55,7 +57,8 @@ class CI_Model {
 	 */
 	public function __construct()
 	{
-		log_message('info', 'Model Class Initialized');
+		$this->class = new ReflectionClass($this);
+		log_message('debug', "Model Class Initialized ".$this->class->getName() );
 	}
 
 	// --------------------------------------------------------------------
@@ -74,7 +77,26 @@ class CI_Model {
 		//	If you're here because you're getting an error message
 		//	saying 'Undefined Property: system/core/Model.php', it's
 		//	most likely a typo in your model code.
-		return get_instance()->$key;
+		if( isset($this->attachVar[$key]) )
+			return $this->attachVar[$key];
+		
+		$CI =& get_instance();
+		if(property_exists($CI,$key) === false ){
+			log_message('error', "Has not this proerty ".$this->class->getName().'::'.$key );
+		}
+		return $CI->$key;
+	}
+	/**
+	 *attach name mock
+	 */
+	function attach($name,$value){
+		$this->attachVar[$name] = $value;
 	}
 
+	/**
+	 *detach name mock
+	 */
+	function detach($name){
+		unset($this->attachVar[$name]);
+	}
 }

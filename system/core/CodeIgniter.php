@@ -36,6 +36,10 @@
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
+require_once(dirname(__FILE__).'/MyException.php');
+if( defined('PHPUNIT_TEST') )
+	require_once(dirname(__FILE__).'/Test.php');
+date_default_timezone_set('Asia/Chongqing');
 
 /**
  * System Initialization File
@@ -511,7 +515,42 @@ if ( ! is_php('5.4'))
  *  Call the requested method
  * ------------------------------------------------------
  */
-	call_user_func_array(array(&$CI, $method), $params);
+	if( !defined('PHPUNIT_TEST') ){
+		//获取函数的所有注释列表
+		$docComment = array();
+		$callFunc  = new ReflectionMethod($CI,$method);
+		$callFuncDoc   = $callFunc->getDocComment();
+		if( $callFuncDoc !== false ){
+			preg_match_all('/@(\w+)\s+(.*?)\n/',$callFuncDoc,$callFuncMatch,PREG_SET_ORDER);
+			foreach($callFuncMatch as $single){
+				$docComment[$single[1]] = $single[2];
+			}
+		}
+
+		//trans注释
+		if( isset($docComment['trans']) )
+			$CI->db->trans_begin();
+			
+		try{
+			$callResult = call_user_func_array(array(&$CI, $method), $params);
+			if( isset($docComment['trans']) ){
+				if($CI->db->trans_status() === FALSE)
+					$CI->db->trans_rollback();
+				else
+					$CI->db->trans_commit();
+			}
+		}catch( Exception $e ){
+			log_message('ERROR','[file:'.$e->getFile().'][line:'.$e->getLine().'][code:'.$e->getCode().'][msg:'.$e->getMessage().']');
+			$callResult = $e;
+			if( isset($docComment['trans']) )
+				$CI->db->trans_rollback();
+		}
+			
+		//view注释
+		if( isset($docComment['view']))
+			$CI->load->view($docComment['view'],array('data'=>$callResult));
+		call_user_func_array(array(&$CI, $method), $params);
+	}
 
 	// Mark a benchmark end point
 	$BM->mark('controller_execution_time_( '.$class.' / '.$method.' )_end');
@@ -528,9 +567,12 @@ if ( ! is_php('5.4'))
  *  Send the final rendered output to the browser
  * ------------------------------------------------------
  */
-	if ($EXT->call_hook('display_override') === FALSE)
-	{
-		$OUT->_display();
+	if( !defined('PHPUNIT_TEST') ){
+		
+		if ($EXT->call_hook('display_override') === FALSE)
+		{
+			$OUT->_display();
+		}
 	}
 
 /*
