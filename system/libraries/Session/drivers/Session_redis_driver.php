@@ -217,7 +217,9 @@ class CI_Session_redis_driver extends CI_Session_driver implements SessionHandle
 				return FALSE;
 			}
 
-			return $this->_redis->setTimeout($this->_key_prefix.$session_id, $this->_config['expiration']);
+			$this->_redis->setTimeout($this->_key_prefix.$session_id, $this->_config['expiration']);
+
+			return TRUE;
 		}
 
 		return FALSE;
