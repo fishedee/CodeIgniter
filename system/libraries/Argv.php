@@ -56,7 +56,7 @@ class CI_Argv{
 				$isRequire = false;
 			
 			$fieldValue = $this->CI->input->$method($fieldName,$isXssFilt);
-			if( $fieldValue == null ){
+			if( $fieldValue === null ){
 				if( $isRequire == false ){
 					if( isset($fieldDefaultValue))
 						$fieldValue = $fieldDefaultValue;
@@ -75,115 +75,6 @@ class CI_Argv{
 			$result[$fieldName] = $fieldValue;
 		}
 		return $result;
-	}
-	
-	public function postRequireInput( $input ,$xssFilt = true )
-	{
-		$result = array();
-		foreach( $input as $key=>$value ){
-			if( $this->CI->input->post($value,$xssFilt) === false ){
-				return array(
-					"code"=>1,
-					"msg"=>"请输入post参数".$value,
-					"data"=>""
-				);
-			}else{
-				$result[$value] = $this->CI->input->post($value,true);
-			}
-		}
-		return array(
-			"code"=>0,
-			"msg"=>"",
-			"data"=>$result
-		);
-	}
-	
-	public function postOptionInput( $input )
-	{
-		$result = array();
-		foreach( $input as $key=>$value ){
-			if( $this->CI->input->post($value,true) === false ){
-				continue;
-			}else{
-				$result[$value] = $this->CI->input->post($value,true);
-			}
-		}
-		return array(
-			"code"=>0,
-			"msg"=>"",
-			"data"=>$result
-		);
-	}
-	
-	public function postDefaultInput( $input ,$default )
-	{
-		$result = array();
-		foreach( $input as $key=>$value ){
-			if( $this->CI->input->post($value,true) === false ){
-				$result[$value] = $default;
-			}else{
-				$result[$value] = $this->CI->input->post($value,true);
-			}
-		}
-		return array(
-			"code"=>0,
-			"msg"=>"",
-			"data"=>$result
-		);
-	}
-	
-	public function getRequireInput( $input )
-	{
-		$result = array();
-		foreach( $input as $key=>$value ){
-			if( $this->CI->input->get($value,true) === false ){
-				return array(
-					"code"=>1,
-					"msg"=>"请输入get参数".$value,
-					"data"=>""
-				);
-			}else{
-				$result[$value] = $this->CI->input->get($value,true);
-			}
-		}
-		return array(
-			"code"=>0,
-			"msg"=>"",
-			"data"=>$result
-		);
-	}
-	
-	public function getOptionInput( $input ){
-		$result = array();
-		foreach( $input as $key=>$value ){
-			if( $this->CI->input->get($value,true) === false ){
-				continue;
-			}else{
-				$result[$value] = $this->CI->input->get($value,true);
-			}
-		}
-		return array(
-			"code"=>0,
-			"msg"=>"",
-			"data"=>$result
-		);
-	}
-	
-	public function getDefaultInput( $input ,$default )
-	{
-		$result = array();
-		foreach( $input as $key=>$value ){
-			if( $this->CI->input->get($value,true) === false ){
-				$result[$value] = $default;
-			}else{
-				$result[$value] = $this->CI->input->post($value,true);
-			}
-		}
-		return array(
-			"code"=>0,
-			"msg"=>"",
-			"data"=>$result
-		);
 	}
 }
 ?>
