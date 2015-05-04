@@ -140,12 +140,17 @@ class CI_Http{
 			curl_setopt($curl,CURLOPT_SSL_VERIFYPEER,false);
 
 			if( isset($ssl['cert'])){
-				curl_setopt($ch,CURLOPT_SSLCERTTYPE,'PEM');
-				curl_setopt($ch,CURLOPT_SSLCERT, $ssl['cert']);
+				curl_setopt($curl,CURLOPT_SSLCERTTYPE,'PEM');
+				curl_setopt($curl,CURLOPT_SSLCERT, $ssl['cert']);
 			}
 			if( isset($ssl['key'])){
-				curl_setopt($ch,CURLOPT_SSLKEYTYPE,'PEM');
-				curl_setopt($ch,CURLOPT_SSLKEY, $ssl['key']);
+				curl_setopt($curl,CURLOPT_SSLKEYTYPE,'PEM');
+				curl_setopt($curl,CURLOPT_SSLKEY, $ssl['key']);
+			}
+			if( isset($ssl['certkey']) ){
+				curl_setopt($curl,CURLOPT_SSLKEYTYPE,'PEM');
+				curl_setopt($curl,CURLOPT_SSLCERT,$ssl['certkey']);
+				var_dump($ssl['certkey']);
 			}
 
 		}

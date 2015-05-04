@@ -5,18 +5,16 @@ class WXSdk_Pay{
 	var $appKey;
 	var $mchId;
 	var $mchKey;
-	var $sslCert;
-	var $sslKey;
+	var $sslCertKey;
 	
-	public function __construct($appId,$appKey,$mchId,$mchKey,$sslCert = '',$sslKey = ''){
+	public function __construct($appId,$appKey,$mchId,$mchKey,$sslCertKey = ''){
 		$this->CI = & get_instance();
 		$this->CI->load->library('http');
 		$this->appId = $appId;
 		$this->appKey = $appKey;
 		$this->mchId = $mchId;
 		$this->mchKey = $mchKey;
-		$this->sslCert = $sslCert;
-		$this->sslKey = $sslKey;
+		$this->sslCertKey = $sslCertKey;
 	}
 
 	/**
@@ -110,7 +108,7 @@ class WXSdk_Pay{
 	private function xmlToArray($xml)
 	{		
         //将XML转为array        
-        $array_data = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);		
+        $array_data = json_decode(json_encode(@simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);		
 		return $array_data;
 	}
 
@@ -129,8 +127,7 @@ class WXSdk_Pay{
 		//执行网络操作
 		$ssl = array();
 		if( $isSSL ){
-			$ssl['cert'] = $this->sslCert;
-			$ssl['key'] = $this->sslKey;
+			$ssl['cert'] = $this->sslCertKey;
 		}
 		$response = $this->CI->http->ajax(array(
 			'url'=>$url,
@@ -205,7 +202,7 @@ class WXSdk_Pay{
 			'wxappid'=>$this->appId,
 			'client_ip'=> $_SERVER['REMOTE_ADDR']
 		),$data);
-		return $this->post('https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack',false,$argv);
+		return $this->post('https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack',true,$argv);
 	}
 
 }
