@@ -198,7 +198,7 @@ class CI_WxSdk{
 		return $qc->notifyOrder();
 	}
 
-	public function sendRedPack($openId,$money,$shopName,$wishing,$actName,$remark){
+	public function sendRedPack($openId,$money,$orderId,$shopName,$wishing,$actName,$remark){
 		$qc = new WXSdk_Pay(
 			$this->option['appId'],
 			$this->option['appKey'],
@@ -211,8 +211,10 @@ class CI_WxSdk{
 		return $qc->sendRedPack(array(
 			'nick_name'=>$shopName,
 			'send_name'=>$shopName,
+			'mch_billno'=>$orderId,
 			're_openid'=>$openId,
 			'total_amount'=>$money,
+			'total_num'=>1,
 			'min_value'=>$money,
 			'max_value'=>$money,
 			'wishing'=>$wishing,
