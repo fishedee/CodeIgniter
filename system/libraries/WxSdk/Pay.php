@@ -5,16 +5,18 @@ class WXSdk_Pay{
 	var $appKey;
 	var $mchId;
 	var $mchKey;
-	var $sslCertKey;
+	var $sslCert;
+	var $sslKey;
 	
-	public function __construct($appId,$appKey,$mchId,$mchKey,$sslCertKey = ''){
+	public function __construct($appId,$appKey,$mchId,$mchKey,$sslCert,$sslKey){
 		$this->CI = & get_instance();
 		$this->CI->load->library('http');
 		$this->appId = $appId;
 		$this->appKey = $appKey;
 		$this->mchId = $mchId;
 		$this->mchKey = $mchKey;
-		$this->sslCertKey = $sslCertKey;
+		$this->sslCert = $sslCert;
+		$this->sslKey = $sslKey;
 	}
 
 	/**
@@ -22,7 +24,7 @@ class WXSdk_Pay{
 	 */
 	private function createNoncestr( $length = 32 ) 
 	{
-		$chars = "abcdefghijklmnopqrstuvwxyz0123456789";  
+		$chars = "abcdefghijklmnopqrstuvwxyz0123456789"; 
 		$str ="";
 		for ( $i = 0; $i < $length; $i++ )  {  
 			$str.= substr($chars, mt_rand(0, strlen($chars)-1), 1);  
@@ -64,6 +66,8 @@ class WXSdk_Pay{
 		$Parameters = array();
 		foreach ($Obj as $k => $v)
 		{
+			if( strlen($v) == 0 )
+				continue;
 			$Parameters[$k] = $v;
 		}
 		//签名步骤一：按字典序排序参数
@@ -90,13 +94,11 @@ class WXSdk_Pay{
         $xml = "<xml>";
         foreach ($arr as $key=>$val)
         {
-        	 if (is_numeric($val))
-        	 {
-        	 	$xml.="<".$key.">".$val."</".$key.">"; 
-
-        	 }
-        	 else
-        	 	$xml.="<".$key."><![CDATA[".$val."]]></".$key.">";  
+        	if (is_numeric($val))
+        		$xml.="<".$key.">".$val."</".$key.">"; 
+			else
+        		$xml.="<".$key."><![CDATA[".$val."]]></".$key.">";  
+        	 	
         }
         $xml.="</xml>";
         return $xml; 
@@ -118,7 +120,6 @@ class WXSdk_Pay{
 	private function post($url,$isSSL,$postData)
 	{
 		//输入参数
-		$postData["appid"] = $this->appId;
 		$postData["mch_id"] = $this->mchId;    
 		$postData["nonce_str"] = $this->createNoncestr();
 		$postData["sign"] = $this->getSign($postData);
@@ -127,7 +128,8 @@ class WXSdk_Pay{
 		//执行网络操作
 		$ssl = array();
 		if( $isSSL ){
-			$ssl['cert'] = $this->sslCertKey;
+			$ssl['cert'] = $this->sslCert;
+			$ssl['key'] = $this->sslKey;
 		}
 		$response = $this->CI->http->ajax(array(
 			'url'=>$url,
@@ -153,7 +155,8 @@ class WXSdk_Pay{
 	*/
 	public function unifiedOrder($data){
 		$argv = array_merge($data,array(
-			'spbill_create_ip'=> $_SERVER['REMOTE_ADDR']
+			'spbill_create_ip'=> $_SERVER['REMOTE_ADDR'],
+			'appid'=>$this->appId
 		));
 		return $this->post('https://api.mch.weixin.qq.com/pay/unifiedorder',false,$argv);
 	}
@@ -200,7 +203,7 @@ class WXSdk_Pay{
 	public function sendRedPack($data){
 		$argv = array_merge(array(
 			'wxappid'=>$this->appId,
-			'client_ip'=> $_SERVER['REMOTE_ADDR']
+			'client_ip'=>$_SERVER['REMOTE_ADDR']
 		),$data);
 		return $this->post('https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack',true,$argv);
 	}

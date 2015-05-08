@@ -156,7 +156,8 @@ class CI_WxSdk{
 			$this->option['appKey'],
 			$this->option['mchId'],
 			$this->option['mchKey'],
-			$this->option['mchSslCertKey']
+			$this->option['mchSslCert'],
+			$this->option['mchSslKey']
 		);
 
 		return $qc->unifiedOrder(array(
@@ -175,7 +176,8 @@ class CI_WxSdk{
 			$this->option['appKey'],
 			$this->option['mchId'],
 			$this->option['mchKey'],
-			$this->option['mchSslCertKey']
+			$this->option['mchSslCert'],
+			$this->option['mchSslKey']
 		);
 
 		return $qc->jsPayOrder(
@@ -189,7 +191,8 @@ class CI_WxSdk{
 			$this->option['appKey'],
 			$this->option['mchId'],
 			$this->option['mchKey'],
-			$this->option['mchSslCertKey']
+			$this->option['mchSslCert'],
+			$this->option['mchSslKey']
 		);
 
 		return $qc->notifyOrder();
@@ -201,7 +204,8 @@ class CI_WxSdk{
 			$this->option['appKey'],
 			$this->option['mchId'],
 			$this->option['mchKey'],
-			$this->option['mchSslCertKey']
+			$this->option['mchSslCert'],
+			$this->option['mchSslKey']
 		);
 
 		return $qc->sendRedPack(array(

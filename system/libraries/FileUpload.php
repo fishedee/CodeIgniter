@@ -31,12 +31,12 @@ class CI_FileUpload{
 		$config['encrypt_name'] = true;
 		$config['overwrite'] = false;
 		if( isset($option['allowed_types']) )
-			$config['allowed_types'] = $option['allowed_types'];
+			$config['allowed_types'] = explode('|',$option['allowed_types']);
 		if( isset($option['max_size']))
 			$config['max_size'] = $option['max_size']/1024;
 		$this->CI->load->library('upload', $config);
 		if( ! $this->CI->upload->do_upload($option['field'])){
-			throw new CI_MyException(1,$this->CI->upload->display_errors());
+			throw new CI_MyException(1,$this->CI->upload->display_errors('',''));
 		}
 		
 		$data = $this->CI->upload->data();
