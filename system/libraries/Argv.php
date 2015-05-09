@@ -63,7 +63,7 @@ class CI_Argv{
 					else
 						continue;
 				}else{
-					throw new CI_MyException(1,"请输入".$method."参数".$fieldName);
+					throw new CI_MyException(1,"请输入".$method."参数".$fieldName,'所有参数为：'.json_encode($this->CI->input->$method()));
 				}
 			}			
 			
