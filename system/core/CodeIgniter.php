@@ -549,7 +549,7 @@ if ( ! is_php('5.4'))
 			
 		//view注释
 		if( isset($docComment['view'])){
-			header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+			header("Cache-Control: private, no-store, no-cache, must-revalidate, max-age=0");
 			header("Cache-Control: post-check=0, pre-check=0", false);
 			header("Pragma: no-cache");
 			$CI->load->view($docComment['view'],array('data'=>$callResult));
