@@ -19,6 +19,114 @@ class CI_Argv{
 			'(\/[0-9a-zA-Z_!~\'\(\)\[\]\.;\?:@&=\+\$,%#-\/^\*\|]*)?)$/',
 			$s) == 1;
 	}
+
+	/**
+	*@deprecated
+	*/
+	public function getOptionInput($input){
+		$result = array();
+		foreach( $input as $singleInput ){
+			$result[] = array(
+				$singleInput,
+				'option'
+			);
+		}
+		try{
+			$data = $this->checkGet($result);
+			return array(
+				'code'=>0,
+				'msg'=>'',
+				'data'=>$data
+			);
+		}catch( Exception $e ){
+			return array(
+				'code'=>$e->getCode(),
+				'msg'=>$e->getMessage(),
+				'data'=>''
+			);
+		}
+	}
+
+	/**
+	*@deprecated
+	*/
+	public function getRequireInput($input){
+		$result = array();
+		foreach( $input as $singleInput ){
+			$result[] = array(
+				$singleInput,
+				'require'
+			);
+		}
+		try{
+			$data = $this->checkGet($result);
+			return array(
+				'code'=>0,
+				'msg'=>'',
+				'data'=>$data
+			);
+		}catch( Exception $e ){
+			return array(
+				'code'=>$e->getCode(),
+				'msg'=>$e->getMessage(),
+				'data'=>''
+			);
+		}
+	}
+
+	/**
+	*@deprecated
+	*/
+	public function postOptionInput($input){
+		$result = array();
+		foreach( $input as $singleInput ){
+			$result[] = array(
+				$singleInput,
+				'option'
+			);
+		}
+		try{
+			$data = $this->checkPost($result);
+			return array(
+				'code'=>0,
+				'msg'=>'',
+				'data'=>$data
+			);
+		}catch( Exception $e ){
+			return array(
+				'code'=>$e->getCode(),
+				'msg'=>$e->getMessage(),
+				'data'=>''
+			);
+		}
+	}
+
+	/**
+	*@deprecated
+	*/
+	public function postRequireInput($input){
+		$result = array();
+		foreach( $input as $singleInput ){
+			$result[] = array(
+				$singleInput,
+				'require'
+			);
+		}
+		try{
+			$data = $this->checkPost($result);
+			return array(
+				'code'=>0,
+				'msg'=>'',
+				'data'=>$data
+			);
+		}catch( Exception $e ){
+			return array(
+				'code'=>$e->getCode(),
+				'msg'=>$e->getMessage(),
+				'data'=>''
+			);
+		}
+	}
 	
 	public function checkGet($input){
 		foreach( $input as $key=>$singleInput ){
