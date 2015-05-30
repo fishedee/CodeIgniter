@@ -523,7 +523,7 @@ if ( ! is_php('5.4'))
 		if( $callFuncDoc !== false ){
 			preg_match_all('/@(\w+)\s+(.*?)\n/',$callFuncDoc,$callFuncMatch,PREG_SET_ORDER);
 			foreach($callFuncMatch as $single){
-				$docComment[$single[1]] = $single[2];
+				$docComment[$single[1]] = trim($single[2]);
 			}
 		}
 
