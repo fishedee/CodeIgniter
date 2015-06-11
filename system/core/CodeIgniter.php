@@ -35,6 +35,7 @@
  * @since	Version 1.0.0
  * @filesource
  */
+$isProfiling = ( isset($_GET['_profiling']) && $_GET['_profiling'] == true);
 defined('BASEPATH') OR exit('No direct script access allowed');
 require_once(dirname(__FILE__).'/MyException.php');
 if( defined('PHPUNIT_TEST') )
@@ -493,14 +494,20 @@ if ( ! is_php('5.4'))
  */
 	$EXT->call_hook('pre_controller');
 
+
+	if( $isProfiling ){
+		$BM->startProfiling();
+		$OUT->enable_profiler(true);
+	}
+
+	// Mark a start point so we can benchmark the controller
+	$BM->mark('controller_execution_time_( '.$class.' / '.$method.' )_start');
+	
 /*
  * ------------------------------------------------------
  *  Instantiate the requested controller
  * ------------------------------------------------------
  */
-	// Mark a start point so we can benchmark the controller
-	$BM->mark('controller_execution_time_( '.$class.' / '.$method.' )_start');
-
 	$CI = new $class();
 
 /*
@@ -515,6 +522,8 @@ if ( ! is_php('5.4'))
  *  Call the requested method
  * ------------------------------------------------------
  */
+	
+
 	if( !defined('PHPUNIT_TEST') ){
 		//获取函数的所有注释列表
 		$docComment = array();
@@ -552,8 +561,8 @@ if ( ! is_php('5.4'))
 			header("Cache-Control: private, no-store, no-cache, must-revalidate, max-age=0");
 			header("Cache-Control: post-check=0, pre-check=0", false);
 			header("Pragma: no-cache");
-			if( isset($_GET['view']) )
-				$CI->load->view($_GET['view'],array('data'=>$callResult));
+			if( isset($_GET['_view']) )
+				$CI->load->view($_GET['_view'],array('data'=>$callResult));
 			else
 				$CI->load->view($docComment['view'],array('data'=>$callResult));
 		}
@@ -562,13 +571,16 @@ if ( ! is_php('5.4'))
 	// Mark a benchmark end point
 	$BM->mark('controller_execution_time_( '.$class.' / '.$method.' )_end');
 
+	if( $isProfiling ){
+		$BM->stopProfiling();
+	}
+
 /*
  * ------------------------------------------------------
  *  Is there a "post_controller" hook?
  * ------------------------------------------------------
  */
 	$EXT->call_hook('post_controller');
-
 /*
  * ------------------------------------------------------
  *  Send the final rendered output to the browser
@@ -588,3 +600,4 @@ if ( ! is_php('5.4'))
  * ------------------------------------------------------
  */
 	$EXT->call_hook('post_system');
+

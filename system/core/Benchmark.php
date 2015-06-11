@@ -59,6 +59,11 @@ class CI_Benchmark {
 	public $marker = array();
 
 	/**
+	 * @var profiling
+	 */
+	public $profiling = '';
+
+	/**
 	 * Set a benchmark marker
 	 *
 	 * Multiple calls to this function can be made so that several
@@ -130,4 +135,35 @@ class CI_Benchmark {
 		return '{memory_usage}';
 	}
 
+	/**
+	*start xhprof 
+	*/
+	public function startProfiling()
+	{
+		xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
+	}
+
+	/**
+	*stop xhprof
+	*/
+	public function stopProfiling()
+	{
+		$xhprof_data = xhprof_disable();
+
+		$XHPROF_ROOT = dirname(__FILE__).'/../profiling';
+		include_once $XHPROF_ROOT . "/xhprof_lib/utils/xhprof_lib.php";
+		include_once $XHPROF_ROOT . "/xhprof_lib/utils/xhprof_runs.php";
+		$xhprof_runs = new XHProfRuns_Default('/tmp');
+		$run_id = $xhprof_runs->save_run($xhprof_data, "codeigniter");
+
+		$this->profiling = 'http://{xhprof_url}/index.php?run='.$run_id.'&source=codeigniter';
+	}
+
+	/**
+	*get xhprof
+	*/
+	public function getProfiling()
+	{
+		return $this->profiling;
+	}
 }

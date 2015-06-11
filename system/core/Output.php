@@ -510,11 +510,10 @@ class CI_Output {
 
 			// If the output data contains closing </body> and </html> tags
 			// we will remove them and add them back after we insert the profile data
-			$output = preg_replace('|</body>.*?</html>|is', '', $output, -1, $count).$CI->profiler->run();
-			if ($count > 0)
-			{
-				$output .= '</body></html>';
-			}
+			header("Content-type:text/html");
+			$output = '<html><body>';
+			$output .= $CI->profiler->run();
+			$output .= '</body></html>';
 		}
 
 		// Does the controller contain a function named _output()?
@@ -529,7 +528,7 @@ class CI_Output {
 		}
 
 		log_message('info', 'Final output sent to browser');
-		log_message('debug', 'Total execution time: '.$elapsed.' database exection time: '.$CI->db->elapsed_time());
+		log_message('debug', 'Total execution time: '.$elapsed);
 	}
 
 	// --------------------------------------------------------------------

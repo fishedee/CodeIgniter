@@ -171,6 +171,7 @@ class CI_Profiler {
 				$profile[$match[1]] = $this->CI->benchmark->elapsed_time($match[1].'_start', $key);
 			}
 		}
+		$profile['xhprof'] = $this->CI->benchmark->getProfiling();
 
 		// Build a table containing the profile data.
 		// Note: At some point we should turn this into a template that can
