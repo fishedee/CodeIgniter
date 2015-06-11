@@ -35,8 +35,8 @@
  * @since	Version 1.0.0
  * @filesource
  */
-$isProfiling = ( isset($_GET['_profiling']) && $_GET['_profiling'] == true);
 defined('BASEPATH') OR exit('No direct script access allowed');
+$isProfiling = ( isset($_GET['_profiling']) && $_GET['_profiling'] == true);
 require_once(dirname(__FILE__).'/MyException.php');
 if( defined('PHPUNIT_TEST') )
 	require_once(dirname(__FILE__).'/Test.php');
@@ -498,6 +498,8 @@ if ( ! is_php('5.4'))
 	if( $isProfiling ){
 		$BM->startProfiling();
 		$OUT->enable_profiler(true);
+	}else{
+		$BM->startSampleProfiling();
 	}
 
 	// Mark a start point so we can benchmark the controller
@@ -573,6 +575,8 @@ if ( ! is_php('5.4'))
 
 	if( $isProfiling ){
 		$BM->stopProfiling();
+	}else{
+		$BM->stopSampleProfiling();
 	}
 
 /*

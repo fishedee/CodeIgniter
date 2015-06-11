@@ -160,6 +160,30 @@ class CI_Benchmark {
 	}
 
 	/**
+	*start xhprof 
+	*/
+	public function startSampleProfiling()
+	{
+		xhprof_sample_enable();
+	}
+
+	/**
+	*stop xhprof
+	*/
+	public function stopSampleProfiling()
+	{
+		$xhprof_data = xhprof_sample_disable();
+
+		$XHPROF_ROOT = dirname(__FILE__).'/../profiling';
+		include_once $XHPROF_ROOT . "/xhprof_lib/utils/xhprof_lib.php";
+		include_once $XHPROF_ROOT . "/xhprof_lib/utils/xhprof_runs.php";
+		$xhprof_runs = new XHProfRuns_Default('/tmp');
+		$run_id = $xhprof_runs->save_run($xhprof_data, "codeigniter");
+
+		$this->profiling = 'http://{xhprof_url}/index.php?run='.$run_id.'&source=codeigniter';
+	}
+
+	/**
 	*get xhprof
 	*/
 	public function getProfiling()
