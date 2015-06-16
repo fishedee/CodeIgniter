@@ -325,7 +325,7 @@ class CI_Session_redis_driver extends CI_Session_driver implements SessionHandle
 		{
 			if (($ttl = $this->_redis->ttl($lock_key)) > 0)
 			{
-				sleep(1);
+				usleep(100*1000);
 				continue;
 			}
 
