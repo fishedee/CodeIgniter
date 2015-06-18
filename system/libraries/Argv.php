@@ -184,5 +184,35 @@ class CI_Argv{
 		}
 		return $result;
 	}
+
+	public function getUrlInfo($url){
+		$pregResult = preg_match(
+			'/^(?:(http[s]?):\/\/)?'.//协议
+			'([0-9a-zA-Z.]+)'.//域名
+			'(?::([0-9]+))?'.//端口
+			'([^?#]*)?'.//地址
+			'(\?[^#]*)?'.//查询地址
+			'(#.*)?$/',//哈希地址 
+			$url,
+			$matchResult);
+		if( $pregResult != 1 )
+			return null;
+		//提取基本信息
+		$basicInfo = array(
+			'protocol'=>isset($matchResult[1])?$matchResult[1]:'',
+			'host'=>isset($matchResult[2])?$matchResult[2]:'',
+			'port'=>isset($matchResult[3])?$matchResult[3]:'',
+			'pathname'=>isset($matchResult[4])?$matchResult[4]:'',
+			'search'=>isset($matchResult[5])?$matchResult[5]:'',
+			'hash'=>isset($matchResult[6])?$matchResult[6]:'',
+		);
+		//url分段信息
+		$segmentStr = trim($basicInfo['pathname'],'/');
+		$segment = explode('/', $segmentStr);
+
+		return array_merge(array(
+			'segment'=>$segment
+		),$basicInfo);
+	}
 }
 ?>
