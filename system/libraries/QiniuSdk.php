@@ -2,6 +2,7 @@
 require_once(dirname(__FILE__).'/QiniuSdk/Auth.php');
 class CI_QiNiuSdk{
 	var $auth;
+	var $CI;
 	
 	public function __construct($option)
     {
@@ -9,6 +10,26 @@ class CI_QiNiuSdk{
 			$option['accessKey'],
 			$option['secertKey']
 		);
+		$this->CI = & get_instance();
+	}
+
+	public function uploadFile($uploadToken,$file,$domain){
+		$this->CI->load->library('http','','http');
+		$result = $this->CI->http->ajax(array(
+			'type'=>'post',
+			'url'=>'http://upload.qiniu.com/',
+			'dataType'=>'form',
+			'data'=>array(
+				'token'=>$uploadToken,
+				'file'=>$file
+			),
+			'responseType'=>'json',
+		));
+
+		if( isset($result['body']['error']) )
+			throw new CI_MyException(1,$result['body']['error']);
+
+		return $domain.$result['body']['key'];
 	}
 
 	public function getUploadToken($bucket,$policy,$expires=3600){

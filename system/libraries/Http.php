@@ -24,6 +24,9 @@ class CI_Http{
 				throw new CI_MyException(1,'不合法的data'.$data.'与dataType'.$dataType);
 		}else if( $dataType == 'plain'){
 			$data = $data;
+		}else if( $dataType == 'form'){
+			if( is_array($data) == false )
+				throw new CI_MyException(1,'不合法的data'.$data.'与dataType'.$dataType);
 		}else{
 			throw new CI_MyException(1,'未确定的data type'.$dataType);
 		}
@@ -124,7 +127,7 @@ class CI_Http{
 			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
 		}else if( $type == 'put' ){
 			curl_setopt($curl,CURLOPT_CUSTOMREQUEST, 'PUT');
-			curl_setopt($curl,CURLOPT_POSTFIELDS,$data);
+			curl_setopt($curl,CURLOPT_POSTFIELDS,$this->getFieldData($dataType,$data));
 		}else{
 			throw new CI_MyException(1,'未确定的HTTP Type'.$type);
 		}
