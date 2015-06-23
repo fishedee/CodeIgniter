@@ -17,7 +17,7 @@ class CI_QiNiuSdk{
 		$this->CI->load->library('http','','http');
 		$result = $this->CI->http->ajax(array(
 			'type'=>'post',
-			'url'=>'http://upload.qiniu.com/',
+			'url'=>'http://up.qiniu.com/',
 			'dataType'=>'form',
 			'data'=>array(
 				'token'=>$uploadToken,
