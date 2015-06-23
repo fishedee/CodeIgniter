@@ -24,6 +24,7 @@ class CI_QiNiuSdk{
 				'file'=>$file
 			),
 			'responseType'=>'json',
+			'timeout'=>30
 		));
 
 		if( isset($result['body']['error']) )
