@@ -25,7 +25,7 @@ class CI_Timer{
 				try{
 					$this->tickSingleTask($singleTimerTaskTask);
 				}catch(Exception $e){
-
+					log_message('error','run '.$singleTimerTask['task'].' fail '.$e->getMessage());
 				}
 			}
 		}
