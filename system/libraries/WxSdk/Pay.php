@@ -207,5 +207,26 @@ class WXSdk_Pay{
 		),$data);
 		return $this->post('https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack',true,$argv);
 	}
-
+	
+	/*
+	 * 查询代金券批次信息
+	 */
+	public function getCoupon($couponStockId){
+		//输入参数
+		$argv["appid"] = $this->appId;
+		$argv["coupon_stock_id"] = $couponStockId;
+		return $this->post('https://api.mch.weixin.qq.com/mmpaymkttransfers/query_coupon_stock',true,$argv);
+	}
+	
+	/*
+	 * 发放代金券
+	*/
+	public function sendCoupon($couponData){
+		//输入参数
+		$argv = array_merge(array(
+			'appid'=>$this->appId,
+			'openid_count'=>1,
+		),$couponData);
+		return $this->post('https://api.mch.weixin.qq.com/mmpaymkttransfers/send_coupon',true,$argv);
+	}
 }
