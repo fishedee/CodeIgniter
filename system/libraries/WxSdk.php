@@ -222,5 +222,32 @@ class CI_WxSdk{
 			'remark'=>$remark
 		));
 	}
-
+	
+	//查询代金券批次信息
+	public function getCoupon($couponStockId){
+		$qc = new WXSdk_Pay(
+				$this->option['appId'],
+				$this->option['appKey'],
+				$this->option['mchId'],
+				$this->option['mchKey'],
+				$this->option['mchSslCert'],
+				$this->option['mchSslKey']
+		);
+	
+		return $qc->getCoupon($couponStockId);
+	}
+	
+	//发放代金券
+	public function sendCoupon($couponData){
+		$qc = new WXSdk_Pay(
+				$this->option['appId'],
+				$this->option['appKey'],
+				$this->option['mchId'],
+				$this->option['mchKey'],
+				$this->option['mchSslCert'],
+				$this->option['mchSslKey']
+		);
+	
+		return $qc->sendCoupon($couponData);
+	}
 }
