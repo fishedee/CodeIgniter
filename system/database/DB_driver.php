@@ -686,6 +686,9 @@ abstract class CI_DB_driver {
 			$this->query_times[] = $time_end - $time_start;
 		}
 
+		if( $time_end - $time_start >= 1 )
+			log_message('error','database slow query'.json_encode($sql));
+
 		// Increment the query counter
 		$this->query_count++;
 
