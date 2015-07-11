@@ -62,7 +62,7 @@ class WXSdk_Util{
 	/**
 	 * 	作用：调用Json类型的API，输入是urlencode，输出是json
 	 */
-	public static function applyJsonApi($url,$type,$keysArgv,$keysArgvType='text'){
+	public static function applyJsonApi($url,$type,$keysArgv,$keysArgvType='text',$timeout=5,$responseType='json'){
 		$CI = & get_instance();
 		$CI->load->library('http');
 		$httpResponse = $CI->http->ajax(array(
@@ -70,7 +70,8 @@ class WXSdk_Util{
 			'type'=>$type,
 			'data'=>$keysArgv,
 			'dataType'=>$keysArgvType,
-			'responseType'=>'json'
+			'responseType'=>$responseType,
+			'timeout'=>$timeout
 		));
 		
 		if( isset($httpResponse['body']['errcode']) && $httpResponse['body']['errcode'] != 0 )

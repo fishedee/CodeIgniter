@@ -4,6 +4,7 @@ require_once(dirname(__FILE__).'/WxSdk/Base.php');
 require_once(dirname(__FILE__).'/WxSdk/Message.php');
 require_once(dirname(__FILE__).'/WxSdk/User.php');
 require_once(dirname(__FILE__).'/WxSdk/Menu.php');
+require_once(dirname(__FILE__).'/WxSdk/Media.php');
 
 require_once(dirname(__FILE__).'/WxSdk/OAuth.php');
 require_once(dirname(__FILE__).'/WxSdk/Js.php');
@@ -38,6 +39,12 @@ class CI_WxSdk{
 		return $qc->getServerIp(
 			$accessToken
 		);
+	}
+
+	//素材接口
+	public function downloadMedia($accessToken,$mediaId){
+		$qc = new WXSdk_Media($accessToken);
+		return $qc->download($mediaId);
 	}
 
 	//用户接口

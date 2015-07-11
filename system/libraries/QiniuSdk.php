@@ -13,7 +13,7 @@ class CI_QiNiuSdk{
 		$this->CI = & get_instance();
 	}
 
-	public function uploadFile($uploadToken,$file,$domain){
+	public function uploadString($uploadToken,$file,$domain){
 		$this->CI->load->library('http','','http');
 		$result = $this->CI->http->ajax(array(
 			'type'=>'post',

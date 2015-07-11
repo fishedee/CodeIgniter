@@ -3,6 +3,7 @@ class CI_FileUpload{
 	var $CI;
 	public function __construct(){
 		$this->CI = & get_instance();
+		$this->CI->load->library('wxSdk', array(), 'wxSdk_fileUpload');
 	}
 	
 	//上传文件，移动到默认的上传位置，并生成上传的URL
@@ -43,14 +44,24 @@ class CI_FileUpload{
 		return $data;
 	}
 	
-	private function imageBase64Upload( $option ){
+	private function imagePostUpload( $option ){
 		//校验文件字段
 		if( !isset($option['upload_path']))
 			throw new CI_MyException(1,'缺少上传保存路径');
 		if( isset($_POST[$option['field']]) == false )
 			throw new CI_MyException(1,'请选择文件上传');
 
-		$data = base64_decode($_POST[$option['field']]);
+		$originData = $_POST[$option['field']];
+		if( strlen($originData) <= 128 ){
+			if( !isset($option['weixin_access_token']))
+				throw new CI_MyException(1,'上传的文件大小少于128字节，明显不属于图片文件');
+			$data = $this->CI->wxSdk_fileUpload->downloadMedia(
+				$option['weixin_access_token'],
+				$originData
+			);
+		}else{
+			$data = base64_decode($originData);
+		}
 		
 		//校验文件大小
 		if( isset($option['max_size']) && $option['max_size'] < strlen($data))
@@ -140,7 +151,7 @@ class CI_FileUpload{
 		if( isset($_FILES[$option['field']]))
 			$result = $this->file( $option );
 		else
-			$result = $this->imageBase64Upload( $option );
+			$result = $this->imagePostUpload( $option );
 		
 		if( $result['is_image'] != true ){
 			@unlink($result['full_path']);
