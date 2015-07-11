@@ -194,6 +194,40 @@ class CI_DB_mysqli_driver extends CI_DB {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Set client profiling 
+	 *
+	 * @return	bool
+	 */
+	protected function _db_set_profiling(){
+		$this->conn_id->query('SET PROFILING=1');
+		return true;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Get client profiling 
+	 *
+	 * @return	string
+	 */
+	protected function _db_get_profiling(){
+		$result_id = $this->conn_id->query('SHOW PROFILE');
+		$allDuration = 0;
+
+		$result_array = array();
+		while ($row = $result_id->fetch_assoc()){
+			$result_array[$row['Status']] = $row['Duration'];
+			$allDuration += $row['Duration'];;
+		}
+		$result_array['all'] = $allDuration;
+		$result_id->free();
+
+		return json_encode($result_array);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Database version number
 	 *
 	 * @return	string

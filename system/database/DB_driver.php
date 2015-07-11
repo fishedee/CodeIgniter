@@ -175,6 +175,16 @@ abstract class CI_DB_driver {
 	public $db_debug		= FALSE;
 
 	/**
+	 * Profiling flag
+	 *
+	 * Whether to profiling sql
+	 *
+	 * @var	bool
+	 */
+	public $db_profiling	= FALSE;
+
+
+	/**
 	 * Benchmark time
 	 *
 	 * @var	int
@@ -440,6 +450,10 @@ abstract class CI_DB_driver {
 			}
 		}
 
+		//Now we set profiling 
+		if( $this->db_profiling )
+			$this->db_set_profiling();
+
 		// Now we set the character set and that's all
 		return $this->db_set_charset($this->char_set);
 	}
@@ -519,6 +533,29 @@ abstract class CI_DB_driver {
 			if ($this->db_debug)
 			{
 				$this->display_error('db_unable_to_set_charset', $charset);
+			}
+
+			return FALSE;
+		}
+
+		return TRUE;
+	}
+
+	/**
+	 * Set client profiling
+	 *
+	 * @param	string
+	 * @return	bool
+	 */
+	public function db_set_profiling()
+	{
+		if (method_exists($this, '_db_set_profiling') && ! $this->_db_set_profiling())
+		{
+			log_message('error', 'Unable to set database connection profiling');
+
+			if ($this->db_debug)
+			{
+				$this->display_error('db_unable_to_set_profiling');
 			}
 
 			return FALSE;
@@ -686,8 +723,15 @@ abstract class CI_DB_driver {
 			$this->query_times[] = $time_end - $time_start;
 		}
 
-		if( $time_end - $time_start >= 1 )
-			log_message('error','database slow query'.json_encode($sql));
+		if( $time_end - $time_start >= 1 ){
+			$executionTime = $time_end - $time_start;
+			$executionSql = json_encode($sql);
+			if( $this->db_profiling )
+				$executionProfiling = $this->_db_get_profiling();
+			else
+				$executionProfiling = '';
+			log_message('error','database slow query time: '.$executionTime.' profiling: '.$executionProfiling.' sql: '.$executionSql);
+		}
 
 		// Increment the query counter
 		$this->query_count++;
