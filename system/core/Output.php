@@ -492,7 +492,7 @@ class CI_Output {
 
 			echo $output;
 			log_message('info', 'Final output sent to browser');
-			log_message('debug', 'Total execution time: '.$elapsed);
+			log_message('info', 'Total execution time: '.$elapsed);
 			return;
 		}
 
@@ -528,7 +528,7 @@ class CI_Output {
 		}
 
 		log_message('info', 'Final output sent to browser');
-		log_message('debug', 'Total execution time: '.$elapsed.' database execution time: '.$CI->db->elapsed_time().' profiling '.$BM->getProfiling());
+		log_message('info', 'Total execution time: '.$elapsed.' database execution time: '.$CI->db->elapsed_time().' profiling '.$BM->getProfiling());
 	}
 
 	// --------------------------------------------------------------------

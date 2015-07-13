@@ -37,7 +37,7 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 $isProfiling = ( isset($_GET['_profiling']) && $_GET['_profiling'] == true);
-$isSampleProfiling = ( mt_rand(0,100) == 0 );
+$isSampleProfiling = false;
 require_once(dirname(__FILE__).'/MyException.php');
 if( defined('PHPUNIT_TEST') )
 	require_once(dirname(__FILE__).'/Test.php');
