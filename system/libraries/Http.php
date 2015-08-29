@@ -163,8 +163,12 @@ class CI_Http{
 		//执行curl
 		$data = curl_exec($curl);
 		$headerData = curl_getinfo($curl);
-		if( $isAsync == false && $data === false )
-			throw new CI_MyException(1,'连接服务器失败 '.$url.' 错误描述：'.curl_error($curl));
+		if( $isAsync == false && $data === false ){
+			$error = curl_error($curl);
+			curl_close($curl);
+			throw new CI_MyException(1,'连接服务器失败 '.$url.' 错误描述：'.$error);
+		}
+			
 		
 		curl_close($curl);
 
