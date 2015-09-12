@@ -14,7 +14,7 @@ class CI_OpenSearchSdk{
 	}
 
 	public function __construct($option){
-		$this->opensearch = new CloudsearchClient($option['appId'],$option['appKey'],array(),'aliyun');
+		$this->opensearch = new CloudsearchClient($option['appId'],$option['appKey'],array('host'=>$option['host']),'aliyun');
 	}
 
 	public function setDocs($db,$table,$data){
