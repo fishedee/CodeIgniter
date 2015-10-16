@@ -36,7 +36,23 @@ class CI_Excel{
 		return $result;
 	}
 	
-	public function exportFromUser($title,$data)
+	private function getColumnName($columnIndex){
+		$result = '';
+		$columnName = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		$columnNameLen = strlen($columnName);
+		$isFirst = true;
+		do{
+			$index = $columnIndex%$columnNameLen;
+			if( $isFirst )
+				$result .= $columnName[$index];
+			else
+				$result .= $columnName[$index-1];
+			$columnIndex = floor($columnIndex/$columnNameLen);
+			$isFirst = false;
+		}while( $columnIndex > 0 );
+		return strrev($result);
+	}
+	public function exportFromUser($title,$data,$path=null)
 	{	
 		// Create new PHPExcel object
 		$objPHPExcel = new PHPExcel();
@@ -50,37 +66,45 @@ class CI_Excel{
 									 ->setCategory($title);
 		//设置Excel高度
 		$columnName = $data[0];
-		$columnIndex = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		$objPHPExcel->setActiveSheetIndex(0);
 		for( $i = 0 ; $i < count($columnName) ; $i++ ){
-			$curColumnIndex = substr( $columnIndex , $i , 1 );
+			$curColumnIndex = $this->getColumnName($i);
 			$objPHPExcel->getActiveSheet()->getColumnDimension($curColumnIndex)->setWidth(40);
 		}
-		
+
 		//设置Excel头部
 		for( $i = 0 ; $i < count($columnName) ; $i++ ){
-			$curColumnIndex = substr( $columnIndex , $i , 1 ).'1';
+			$curColumnIndex = $this->getColumnName($i).'1';
 			$objPHPExcel->getActiveSheet()->setCellValue($curColumnIndex,$columnName[$i]);
 		}
+
 		//设置Excel数据
 		for( $i = 1 ; $i < count($data) ; $i++){
 			for( $j = 0 ; $j < count($columnName) ; $j++ ){
-				$curColumnIndex = substr( $columnIndex , $j , 1 ).($i+1);
+				$curColumnIndex = $this->getColumnName($j).($i+1);
 				$objPHPExcel->getActiveSheet()->setCellValueExplicit($curColumnIndex,$this->flitNoUtf8($data[$i][$j]),PHPExcel_Cell_DataType::TYPE_STRING);
 			}
 		}
-		//exit(0);
-		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment;filename="'.$title.'.xls"');
-		header('Cache-Control: max-age=0');
 
-		// If you're serving to IE over SSL, then the following may be needed
-		header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
-		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
-		header ('Pragma: public'); // HTTP/1.0
+		if( $path == null )
+		{
+			//exit(0);
+			header('Content-Type: application/vnd.ms-excel');
+			header('Content-Disposition: attachment;filename="'.$title.'.xls"');
+			header('Cache-Control: max-age=0');
 
-		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-		$objWriter->save('php://output');
+			// If you're serving to IE over SSL, then the following may be needed
+			header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+			header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+			header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+			header ('Pragma: public'); // HTTP/1.0
+
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+			$objWriter->save('php://output');
+		}else
+		{
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+			$objWriter->save($path);
+		}
 	}
 }
