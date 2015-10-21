@@ -11,6 +11,6 @@ class CI_Uedit {
 	
 	public function control()
 	{	
-		include(dirname(__FILE__).'/uedit/controller.php');
+		return include(dirname(__FILE__).'/uedit/controller.php');
 	}
 };
