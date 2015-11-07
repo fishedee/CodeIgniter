@@ -141,7 +141,7 @@ class CI_Session {
 
 		if( !isset($_COOKIE[$this->_config['cookie_name']]) ){
 			//使用uuid来设置session_id，以保证完全不冲突
-			session_id($this->CI->uuid->generate());
+			session_id($this->CI->uuid->vMe());
 		}
 
 		session_start();
