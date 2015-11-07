@@ -12,7 +12,7 @@ class CI_Uuid{
 	
 	public function vMe(){
 		$curTime = floor(microtime(true)*10000);
-		$uniqueId = sha1($this->v1());
+		$uniqueId = sha1($this->v4());
 		return dechex($curTime)."0".$uniqueId;
 	}
 
