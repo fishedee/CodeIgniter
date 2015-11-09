@@ -54,7 +54,6 @@ class CI_Session {
 	 * Just a reference to $_SESSION, for BC purposes.
 	 */
 	public $userdata;
-	private $CI;
 
 	protected $_driver = 'files';
 	protected $_config;
@@ -69,8 +68,6 @@ class CI_Session {
 	 */
 	public function __construct(array $params = array())
 	{
-		$this->CI = & get_instance();
-		$this->CI->load->library('uuid','','uuid');
 		// No sessions under CLI
 		if (is_cli())
 		{
@@ -132,16 +129,11 @@ class CI_Session {
 		if (isset($_COOKIE[$this->_config['cookie_name']])
 			&& (
 				! is_string($_COOKIE[$this->_config['cookie_name']])
-				OR ! preg_match('/^[0-9a-f]{52}$/', $_COOKIE[$this->_config['cookie_name']])
+				OR ! preg_match('/^[0-9a-f]{40}$/', $_COOKIE[$this->_config['cookie_name']])
 			)
 		)
 		{
 			unset($_COOKIE[$this->_config['cookie_name']]);
-		}
-
-		if( !isset($_COOKIE[$this->_config['cookie_name']]) ){
-			//使用uuid来设置session_id，以保证完全不冲突
-			session_id($this->CI->uuid->vMe());
 		}
 
 		session_start();
