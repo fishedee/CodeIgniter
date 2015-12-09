@@ -291,7 +291,7 @@ class CI_Notification {
 	/*
 	 *	predefinedField keys: ["alias", "alias_type", "alert", "badge", "sound", "production_mode"]
 	 */
-	function sendIOSCustomizedcast($predefinedField) {
+	function sendIOSCustomizedcast($predefinedField, $customizedField) {
 		try {
 			$customizedcast = new IOSCustomizedcast();
 			$customizedcast->setAppMasterSecret($this->appMasterSecret);
@@ -303,6 +303,11 @@ class CI_Notification {
 			// use file_id to send customized notification.
 			foreach( $predefinedField as $key=>$value ){
 				$customizedcast->setPredefinedKeyValue($key, $value);
+			}
+
+			// Set customized fields
+			foreach( $customizedField as $key=>$value ){
+				$customizedcast->setCustomizedField($key, $value);
 			}
 
 			return $customizedcast->send();
