@@ -36,7 +36,7 @@ class CI_Notification {
 			$brocast->setPredefinedKeyValue("timestamp",        $this->timestamp);
 
 			foreach( $predefinedField as $key=>$value ){
-				$brocast->setPredefinedKeyValue($key,           $ticker);
+				$brocast->setPredefinedKeyValue($key,           $value);
 			}
 
 			// [optional]Set extra fields
