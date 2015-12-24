@@ -44,7 +44,8 @@ class CI_Notification {
 				$brocast->setExtraField($key, $value);
 			}
 
-			return $brocast->send();
+			$result = $brocast->send();
+			return $result;
 		} catch (Exception $e) {
 			log_message("error", "Caught exception: " . $e->getMessage());
 		}
@@ -149,7 +150,7 @@ class CI_Notification {
 	/*
 	 *	predefinedField keys: ["alias", "alias_type", "ticker", "title", "text", "after_open"]
 	 */
-	function sendAndroidCustomizedcast($predefinedField) {
+	function sendAndroidCustomizedcast($predefinedField, $extraField) {
 		try {
 			$customizedcast = new AndroidCustomizedcast();
 			$customizedcast->setAppMasterSecret($this->appMasterSecret);
@@ -160,6 +161,10 @@ class CI_Notification {
 			// use file_id to send customized notification.
 			foreach( $predefinedField as $key=>$value ){
 				$customizedcast->setPredefinedKeyValue($key, $value);
+			}
+
+			foreach( $extraField as $key=>$value ){
+				$customizedcast->setExtraField($key, $value);
 			}
 			
 			return $customizedcast->send();
