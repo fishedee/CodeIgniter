@@ -47,8 +47,8 @@ class CI_Queue{
 
 	public function produce(){
 		$args = func_get_args();
-		if( count($args) < 2 ){
-			throw new CI_MyException(1,"至少需要两个参数,queueKey,queueData");
+		if( count($args) < 1 ){
+			throw new CI_MyException(1,"至少需要一个参数,queueKey");
 		}
 		$key = $this->prefix.$args[0];
 		$data = array_slice($args,1);
