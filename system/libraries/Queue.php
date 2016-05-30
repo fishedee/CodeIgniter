@@ -47,7 +47,6 @@ class CI_Queue{
 
 	private function getHttp(){
 		$method = $_SERVER['REQUEST_METHOD'];
-		var_dump($_SERVER);
 		$url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 		$headers = array();
 		foreach($_SERVER as $key => $value) {
