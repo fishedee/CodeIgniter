@@ -45,6 +45,33 @@ class CI_Queue{
 		$this->redis = $redis;
 	}
 
+	private function getHttp(){
+		$method = $_SERVER['REQUEST_METHOD'];
+		var_dump($_SERVER);
+		$url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		$headers = array();
+		foreach($_SERVER as $key => $value) {
+			if(substr($key, 0, 5) != 'HTTP_') {
+				continue;
+			}
+			$key = substr($key, 5); 
+			$key = strtolower($key); 
+			$key = str_replace('_', ' ', $key); 
+			$key = ucwords($key); 
+			$key = str_replace(' ', '-', $key); 
+			
+			if( !isset($headers[$key]) ){
+				$headers[$key] = array();
+			}
+			$headers[$key][] = $value; 
+		}
+		return array(
+			"method"=>$method,
+			"url"=>$url,
+			"header"=>$headers,
+		);
+	}
+
 	public function produce(){
 		$args = func_get_args();
 		if( count($args) < 1 ){
@@ -52,6 +79,7 @@ class CI_Queue{
 		}
 		$key = $this->prefix.$args[0];
 		$data = array_slice($args,1);
+		$data = array_merge(array($this->getHttp()),$data);
 		$data = json_encode($data);
 		$this->redis->lpush($key,$data);
 	}
